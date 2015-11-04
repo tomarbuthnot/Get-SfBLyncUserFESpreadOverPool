@@ -18,11 +18,20 @@ $Poolname = "MK-SFB-FEPool01.domain.int"
 
 
 # Script
+
+
+
 $FEs = Get-CsPool -Identity $Poolname | Select Computers -ExpandProperty Computers
 
 $OutputCollection=  @()
 
-Get-CsUser -Filter {RegistrarPool -eq $Poolname} | ForEach-Object {
+$Users = Get-CsUser -Filter {RegistrarPool -eq $Poolname} 
+
+$totalUsers = $Users.count
+
+$Users | ForEach-Object {
+                            $count = $count + 1
+                            
                             $user = $_.SipAddress
                             $FEOrder = $_ | Get-CsUserPoolInfo | Select-Object -ExpandProperty PrimaryPoolMachinesInPreferredOrder
 
@@ -34,6 +43,8 @@ Get-CsUser -Filter {RegistrarPool -eq $Poolname} | ForEach-Object {
                             $output | add-member NoteProperty "FEThird" -value $FEOrder[2]
                             
                             $OutputCollection += $output
+                            
+                            Write-Host "User $count of $totalUsers Complete"
                             }
                 
 $totalUsers = (Get-CsUser | Where-Object{$_.RegistrarPool -like $Poolname}).count
