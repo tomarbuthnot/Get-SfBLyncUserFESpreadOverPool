@@ -46,8 +46,7 @@ $Users | ForEach-Object {
                             
                             Write-Host "User $count of $totalUsers Complete"
                             }
-                
-$totalUsers = (Get-CsUser | Where-Object{$_.RegistrarPool -like $Poolname}).count
+
 
 
 $OutputCollection2 =  @()
